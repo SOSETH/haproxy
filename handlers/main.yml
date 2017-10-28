@@ -1,3 +1,4 @@
 ---
   - name: restart HAproxy
+    become: True
     service: name=haproxy enabled=yes state=restarted
