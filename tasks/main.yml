@@ -1,9 +1,11 @@
 ---
   - name: Install haproxy
     become: True
-    apt: name={{ item }} state=present update_cache=yes cache_valid_time=1800
-    with_items:
-      - haproxy
+    apt:
+      name: haproxy
+      state: present
+      update_cache: yes
+      cache_valid_time: 1800
 
   - name: Create haproxy systemd drop-in directory
     become: True
