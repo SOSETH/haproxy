@@ -31,5 +31,10 @@
 
   - name: Copy haproxy base config
     become: True
-    copy: src=01-defaults.conf dest=/etc/haproxy/conf.d/01-defaults.conf owner=root group=root mode=0644
+    template:
+      src: 01-defaults.conf.j2
+      dest: /etc/haproxy/conf.d/01-defaults.conf
+      owner: root
+      group: root
+      mode: 0644
     notify: restart HAproxy
