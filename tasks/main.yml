@@ -6,6 +6,7 @@
       state: present
       update_cache: yes
       cache_valid_time: 1800
+      default_release: "{{ haproxy_debian_release }}"
 
   - name: Create haproxy systemd drop-in directory
     become: True
