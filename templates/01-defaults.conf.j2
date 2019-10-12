@@ -19,6 +19,7 @@ global
 	ssl-default-bind-options {{ haproxy_ssl_bind_options }}
 	ssl-default-server-ciphers {{ haproxy_ssl_bind_ciphers }}
 	ssl-default-server-options {{ haproxy_ssl_bind_options }}
+	hard-stop-after 90s
 
 {% if haproxy_ssl_dhparams_pem is defined %}
 	tune.ssl.default-dh-param 2048
