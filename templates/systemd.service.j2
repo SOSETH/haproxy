@@ -1,4 +1,8 @@
+# Managed by ansible (role: haproxy)
+# DO NOT EDIT!
+
 [Service]
+LimitNOFILE={{ haproxy_maxconn + 10 }}
 ExecStartPre=
 ExecStartPre=/etc/haproxy/gen-conf.sh
 ExecStartPre=/usr/sbin/haproxy -f ${CONFIG} -c -q $EXTRAOPTS

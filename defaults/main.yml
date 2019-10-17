@@ -2,5 +2,6 @@ haproxy_ssl_bind_ciphers: 'ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES1
 haproxy_ssl_bind_options: 'no-sslv3'
 haproxy_ssl_server_ciphers: 'ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS'
 haproxy_ssl_server_options: 'no-sslv3'
+haproxy_maxconn: 512
 
 haproxy_debian_release: "{{ ansible_distribution_release }}"

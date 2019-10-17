@@ -1,3 +1,6 @@
+# Managed by ansible (role: haproxy)
+# DO NOT EDIT!
+
 global
 	log /dev/log	local0 notice
 	log /dev/log	local1 notice
@@ -11,6 +14,8 @@ global
 	# Default SSL material locations
 	ca-base /etc/ssl/certs
 	crt-base /etc/ssl/private
+
+	maxconn {{ haproxy_maxconn }}
 
 	# Default ciphers to use on SSL-enabled listening sockets.
 	# For more information, see ciphers(1SSL). This list is from:
