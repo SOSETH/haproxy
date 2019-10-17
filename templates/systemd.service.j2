@@ -2,7 +2,7 @@
 # DO NOT EDIT!
 
 [Service]
-LimitNOFILE={{ haproxy_maxconn + 10 }}
+LimitNOFILE={{ haproxy_maxconn + 25 }}
 ExecStartPre=
 ExecStartPre=/etc/haproxy/gen-conf.sh
 ExecStartPre=/usr/sbin/haproxy -f ${CONFIG} -c -q $EXTRAOPTS
