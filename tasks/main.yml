@@ -39,7 +39,7 @@
   - name: Setup chroot
     become: True
     file: dest=/var/lib/haproxy state=directory
-    when: ansible_distribution == "Archlinux"
+    when: ansible_distribution == "Archlinux" and haproxy_chroot
 
   - name: Setup error page directory
     become: True
