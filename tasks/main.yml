@@ -1,4 +1,7 @@
 ---
+
+  - include_tasks: variables.yml
+
   - name: Install haproxy
     become: True
     apt:
@@ -7,6 +10,14 @@
       update_cache: yes
       cache_valid_time: 1800
       default_release: "{{ haproxy_debian_release }}"
+    when: ansible_distribution == "Debian"
+
+  - name: Install haproxy
+    become: True
+    package:
+      name: haproxy
+      state: present
+    when: ansible_distribution == "Archlinux"
 
   - name: Create haproxy systemd drop-in directory
     become: True
@@ -24,6 +35,34 @@
     become: True
     copy: src=haproxy-systemd.conf dest=/etc/systemd/system/haproxy.service.d/ansible.conf owner=root group=root mode=0644
     register: dropindir
+
+  - name: Setup chroot
+    become: True
+    file: dest=/var/lib/haproxy state=directory
+    when: ansible_distribution == "Archlinux"
+
+  - name: Setup error page directory
+    become: True
+    file: dest=/etc/haproxy/errors state=directory
+    when: ansible_distribution == "Archlinux"
+
+  - name: Copy error pages
+    become: True
+    copy:
+      src: "{{ item }}.http"
+      dest: "/etc/haproxy/errors/{{ item }}.http"
+      owner: root
+      group: root
+      mode: 0644
+    when: ansible_distribution == "Archlinux"
+    with_items:
+      - 400
+      - 403
+      - 408
+      - 500
+      - 502
+      - 503
+      - 504
 
   - name: reload systemd
     become: True
