@@ -44,7 +44,6 @@
   - name: Setup error page directory
     become: True
     file: dest=/etc/haproxy/errors state=directory
-    when: ansible_distribution == "Archlinux"
 
   - name: Copy error pages
     become: True
@@ -54,7 +53,6 @@
       owner: root
       group: root
       mode: 0644
-    when: ansible_distribution == "Archlinux"
     with_items:
       - 400
       - 403
