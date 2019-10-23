@@ -33,7 +33,7 @@
 
   - name: Configure haproxy to use conf.d-style configs
     become: True
-    copy: src=haproxy-systemd.conf dest=/etc/systemd/system/haproxy.service.d/ansible.conf owner=root group=root mode=0644
+    template: src=systemd.service.j2 dest=/etc/systemd/system/haproxy.service.d/ansible.conf owner=root group=root mode=0644
     register: dropindir
 
   - name: Setup chroot
