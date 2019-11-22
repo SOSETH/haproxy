@@ -18,6 +18,7 @@ global
 	crt-base /etc/ssl/private
 
 	maxconn {{ haproxy_maxconn }}
+	tune.h2.initial-window-size 1048576
 
 	# Default ciphers to use on SSL-enabled listening sockets.
 	# For more information, see ciphers(1SSL). This list is from:
