@@ -1,8 +1,8 @@
 ---
-- name: Include OS-specific variables (Debian).
+- name: Include OS-specific variables (Debian)
   include_vars: "Debian.yml"
   when: ansible_os_family == "Debian"
 
-- name: Include OS-specific variables (Archlinux).
+- name: Include OS-specific variables (Archlinux)
   include_vars: "Archlinux.yml"
   when: ansible_os_family == "Archlinux"

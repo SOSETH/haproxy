@@ -7,8 +7,6 @@
     apt:
       name: haproxy
       state: present
-      update_cache: yes
-      cache_valid_time: 1800
       default_release: "{{ haproxy_debian_release }}"
     when: ansible_distribution == "Debian"
 
@@ -19,13 +17,15 @@
       state: present
     when: ansible_distribution == "Archlinux"
 
-  - name: Create haproxy systemd drop-in directory
+  - name: Create haproxy directories
     become: True
-    file: dest=/etc/systemd/system/haproxy.service.d state=directory
-
-  - name: Create haproxy conf.d directory
-    become: True
-    file: dest=/etc/haproxy/conf.d state=directory
+    file:
+      path: /etc/systemd/system/haproxy.service.d
+      state: directory
+    loop:
+      - "/etc/systemd/system/haproxy.service.d"
+      - "/etc/haproxy/conf.d"
+      - "/etc/haproxy/errors"
 
   - name: Copy haproxy config script
     become: True
@@ -41,30 +41,19 @@
     file: dest=/var/lib/haproxy state=directory
     when: ansible_distribution == "Archlinux" and haproxy_chroot
 
-  - name: Setup error page directory
-    become: True
-    file: dest=/etc/haproxy/errors state=directory
-
   - name: Copy error pages
     become: True
     copy:
-      src: "{{ item }}.http"
-      dest: "/etc/haproxy/errors/{{ item }}.http"
+      src: "error_pages/"
+      dest: "/etc/haproxy/errors/"
       owner: root
       group: root
       mode: 0644
-    with_items:
-      - 400
-      - 403
-      - 408
-      - 500
-      - 502
-      - 503
-      - 504
 
   - name: reload systemd
     become: True
-    command: systemctl daemon-reload
+    systemd:
+      daemon_reload: True
     when: dropindir.changed
 
   - name: Copy haproxy base config
