@@ -20,7 +20,7 @@
   - name: Create haproxy directories
     become: True
     file:
-      path: /etc/systemd/system/haproxy.service.d
+      path: "{{ item }}"
       state: directory
     loop:
       - "/etc/systemd/system/haproxy.service.d"
