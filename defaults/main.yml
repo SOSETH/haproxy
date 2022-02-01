@@ -5,6 +5,8 @@ haproxy_ssl_server_options: 'no-sslv3'
 
 haproxy_chroot: True
 
+haproxy_prometheus_exporter: True
+
 haproxy_maxconn: 512
 haproxy_own_file_limit: 25
 haproxy_limit_no_file: "{{ haproxy_maxconn + haproxy_own_file_limit }}"
