@@ -57,3 +57,10 @@ listen stats
 	stats realm Haproxy\ Statistics
 	stats uri /stats
 	stats auth foo:bar
+
+{% if haproxy_prometheus_exporter %}
+frontend metrics
+   bind *:10002
+   option http-use-htx
+   http-request use-service prometheus-exporter if { path /metrics }
+{% endif %}
