@@ -1,78 +1,94 @@
 ---
+- name: Include variables
+  ansible.builtin.include_tasks: variables.yml
 
-  - include_tasks: variables.yml
+- name: Install Haproxy (Debian)
+  become: true
+  ansible.builtin.apt:
+    name: haproxy
+    state: present
+    update_cache: true
+    cache_valid_time: 1800
+  when: ansible_distribution == "Debian"
 
-  - name: Install haproxy
-    become: True
-    apt:
-      name: haproxy
-      state: present
-      update_cache: yes
-      cache_valid_time: 1800
-      default_release: "{{ haproxy_debian_release }}"
-    when: ansible_distribution == "Debian"
+- name: Install Haproxy (Arch)
+  become: true
+  ansible.builtin.package:
+    name: haproxy
+    state: present
+  when: ansible_distribution == "Archlinux"
 
-  - name: Install haproxy
-    become: True
-    package:
-      name: haproxy
-      state: present
-    when: ansible_distribution == "Archlinux"
+- name: Create Haproxy systemd drop-in directory
+  become: true
+  ansible.builtin.file:
+    dest: /etc/systemd/system/haproxy.service.d
+    state: directory
+    mode: "0644"
 
-  - name: Create haproxy systemd drop-in directory
-    become: True
-    file: dest=/etc/systemd/system/haproxy.service.d state=directory
+- name: Create haproxy conf.d directory
+  become: true
+  ansible.builtin.file:
+    dest: /etc/haproxy/conf.d
+    state: directory
+    mode: "0644"
 
-  - name: Create haproxy conf.d directory
-    become: True
-    file: dest=/etc/haproxy/conf.d state=directory
+- name: Copy Haproxy config script
+  become: true
+  ansible.builtin.copy:
+    src: gen-conf.sh
+    dest: /etc/haproxy/gen-conf.sh
+    owner: root
+    group: root
+    mode: "0744"
 
-  - name: Copy haproxy config script
-    become: True
-    copy: src=gen-conf.sh dest=/etc/haproxy/gen-conf.sh owner=root group=root mode=0744
+- name: Configure haproxy to use conf.d-style configs
+  become: true
+  ansible.builtin.template:
+    src: systemd.service.j2
+    dest: /etc/systemd/system/haproxy.service.d/ansible.conf
+    owner: root
+    group: root
+    mode: "0644"
+  register: dropindir
 
-  - name: Configure haproxy to use conf.d-style configs
-    become: True
-    template: src=systemd.service.j2 dest=/etc/systemd/system/haproxy.service.d/ansible.conf owner=root group=root mode=0644
-    register: dropindir
+- name: Setup chroot
+  become: true
+  ansible.builtin.file:
+    dest: /var/lib/haproxy
+    state: directory
+    mode: "0644"
+  when: ansible_distribution == "Archlinux" and haproxy_chroot
 
-  - name: Setup chroot
-    become: True
-    file: dest=/var/lib/haproxy state=directory
-    when: ansible_distribution == "Archlinux" and haproxy_chroot
+- name: Setup error page directory
+  become: true
+  ansible.builtin.file:
+    dest: /etc/haproxy/errors
+    state: directory
+    mode: "0644"
 
-  - name: Setup error page directory
-    become: True
-    file: dest=/etc/haproxy/errors state=directory
+- name: Copy error pages
+  become: true
+  ansible.builtin.copy:
+    src: "{{ item }}.http"
+    dest: "/etc/haproxy/errors/{{ item }}.http"
+    owner: root
+    group: root
+    mode: "0644"
+  with_items:
+    - 400
+    - 403
+    - 408
+    - 500
+    - 502
+    - 503
+    - 504
 
-  - name: Copy error pages
-    become: True
-    copy:
-      src: "{{ item }}.http"
-      dest: "/etc/haproxy/errors/{{ item }}.http"
-      owner: root
-      group: root
-      mode: 0644
-    with_items:
-      - 400
-      - 403
-      - 408
-      - 500
-      - 502
-      - 503
-      - 504
-
-  - name: reload systemd
-    become: True
-    command: systemctl daemon-reload
-    when: dropindir.changed
-
-  - name: Copy haproxy base config
-    become: True
-    template:
-      src: 01-defaults.conf.j2
-      dest: /etc/haproxy/conf.d/01-defaults.conf
-      owner: root
-      group: root
-      mode: 0644
-    notify: restart HAproxy
+- name: Copy haproxy base config
+  become: true
+  ansible.builtin.template:
+    src: 01-defaults.conf.j2
+    dest: /etc/haproxy/conf.d/01-defaults.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart Haproxy

@@ -1,4 +1,8 @@
 ---
-  - name: restart HAproxy
-    become: True
-    service: name=haproxy enabled=yes state=restarted
+- name: Restart Haproxy
+  become: true
+  ansible.builtin.systemd_service:
+    name: haproxy
+    enabled: true
+    state: restarted
+    daemon_reload: true
