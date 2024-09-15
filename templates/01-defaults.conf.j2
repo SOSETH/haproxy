@@ -61,6 +61,7 @@ listen stats
 {% if haproxy_prometheus_exporter %}
 frontend metrics
    bind *:10002
-   option http-use-htx
+   mode http
    http-request use-service prometheus-exporter if { path /metrics }
+   no log
 {% endif %}
