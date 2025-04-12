@@ -83,6 +83,16 @@
     - 503
     - 504
 
+- name: Copy DH Params
+  become: true
+  ansible.builtin.copy:
+    src: dh-params.txt
+    dest: /etc/haproxy/dh-params.txt
+    owner: root
+    group: root
+    mode: "0644"
+  when: haproxy_use_provided_dhparams
+
 - name: Copy haproxy base config
   become: true
   ansible.builtin.template:

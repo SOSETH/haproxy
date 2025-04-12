@@ -1,11 +1,17 @@
-haproxy_ssl_bind_ciphers: 'ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS'
-haproxy_ssl_bind_options: 'no-sslv3'
-haproxy_ssl_server_ciphers: 'ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS'
-haproxy_ssl_server_options: 'no-sslv3'
+haproxy_ssl_bind_curves: 'X25519:prime256v1:secp384r1'
+haproxy_ssl_bind_ciphers: 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305'
+haproxy_ssl_bind_ciphersuites: 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256'
+haproxy_ssl_bind_options: 'prefer-client-ciphers ssl-min-ver TLSv1.2 no-tls-tickets'
+
+haproxy_ssl_server_ciphers: 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305'
+haproxy_ssl_server_ciphersuites: 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256'
+haproxy_ssl_server_options: 'ssl-min-ver TLSv1.2 no-tls-tickets'
+
+haproxy_use_provided_dhparams: true
 
 haproxy_chroot: true
 
-haproxy_prometheus_exporter: True
+haproxy_prometheus_exporter: true
 
 haproxy_maxconn: 512
 haproxy_own_file_limit: 25

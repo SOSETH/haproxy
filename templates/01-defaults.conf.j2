@@ -20,13 +20,22 @@ global
 	maxconn {{ haproxy_maxconn }}
 	tune.h2.initial-window-size 1048576
 
-	# Default ciphers to use on SSL-enabled listening sockets.
-	# For more information, see ciphers(1SSL). This list is from:
-	#  https://hynek.me/articles/hardening-your-web-servers-ssl-ciphers/
-	ssl-default-bind-ciphers {{ haproxy_ssl_bind_ciphers }}
-	ssl-default-bind-options {{ haproxy_ssl_bind_options }}
-	ssl-default-server-ciphers {{ haproxy_ssl_bind_ciphers }}
-	ssl-default-server-options {{ haproxy_ssl_bind_options }}
+  # Get latest config from
+  #  https://ssl-config.mozilla.org
+  # intermediate configuration
+  ssl-default-bind-curves {{ haproxy_ssl_bind_curves }}
+  ssl-default-bind-ciphers {{ haproxy_ssl_bind_ciphers }}
+  ssl-default-bind-ciphersuites {{ haproxy_ssl_bind_ciphersuites}}
+  ssl-default-bind-options {{ haproxy_ssl_bind_options }}
+
+  ssl-default-server-ciphers {{ haproxy_ssl_server_ciphers }}
+  ssl-default-server-ciphersuites {{ haproxy_ssl_server_ciphersuites }}
+  ssl-default-server-options {{ haproxy_ssl_server_options }}
+
+  {% if haproxy_use_provided_dhparams %}
+  ssl-dh-param-file /etc/haproxy/dh-params.txt
+  {% endif %}
+
 	hard-stop-after 90s
 
 {% if haproxy_ssl_dhparams_pem is defined %}
