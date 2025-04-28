@@ -66,6 +66,8 @@ listen stats
 	stats realm Haproxy\ Statistics
 	stats uri /stats
 	stats auth foo:bar
+	stats show-modules
+	#stats admin if TRUE
 
 {% if haproxy_prometheus_exporter %}
 frontend metrics
