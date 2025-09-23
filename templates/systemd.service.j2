@@ -5,8 +5,8 @@
 LimitNOFILE={{ haproxy_limit_no_file }}
 ExecStartPre=
 ExecStartPre=/etc/haproxy/gen-conf.sh
-ExecStartPre=/usr/sbin/haproxy -f ${CONFIG} -c -q $EXTRAOPTS
+ExecStartPre=/usr/sbin/haproxy -f ${CONFIG} -c
 ExecReload=
 ExecReload=/etc/haproxy/gen-conf.sh
-ExecReload=/usr/sbin/haproxy -f ${CONFIG} -c -q $EXTRAOPTS
+ExecReload=/usr/sbin/haproxy -f ${CONFIG} -c
 ExecReload=/bin/kill -USR2 $MAINPID
