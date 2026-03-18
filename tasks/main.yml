@@ -9,14 +9,14 @@
     state: present
     update_cache: true
     cache_valid_time: 1800
-  when: ansible_distribution == "Debian"
+  when: ansible_facts.distribution == "Debian"
 
 - name: Install Haproxy (Arch)
   become: true
   ansible.builtin.package:
     name: haproxy
     state: present
-  when: ansible_distribution == "Archlinux"
+  when: ansible_facts.distribution == "Archlinux"
 
 - name: Create Haproxy systemd drop-in directory
   become: true
@@ -57,7 +57,7 @@
     dest: /var/lib/haproxy
     state: directory
     mode: "0644"
-  when: ansible_distribution == "Archlinux" and haproxy_chroot
+  when: ansible_facts.distribution == "Archlinux" and haproxy_chroot
 
 - name: Setup error page directory
   become: true
